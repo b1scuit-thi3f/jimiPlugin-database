@@ -1,6 +1,6 @@
 from plugins.database.includes import database
 from core.models import action
-from core import helpers, auth
+from core import helpers, auth, db
 
 class _databaseSearch(action._action):
     host = str()
@@ -10,6 +10,7 @@ class _databaseSearch(action._action):
     dbType = str()
     timeout = int()
     search = str()
+    returnOne = bool()
 
     def run(self,data,persistentData,actionResult):
         import pyodbc
@@ -23,13 +24,23 @@ class _databaseSearch(action._action):
         timeout = 30
         if self.timeout != 0:
             timeout=self.timeout
+        
+        actionResult["result"] = False
+        actionResult["rc"] = 404
+        actionResult["msg"] = "could not connect"
 
         dbControl = database.control(dbType,host,username,password,connectionDetails,timeout)
-        dbControl.isConnected()
-
-        actionResult["result"] = True
-        actionResult["rc"] = 0
-        actionResult["msg"] = "done"
+        if dbControl.isConnected():
+            rc, results = dbControl.query(search,self.returnOne)
+            if rc:
+                if self.returnOne:
+                    actionResult["result"] = results
+                else:
+                    actionResult["results"] = results
+                actionResult["rc"] = 0
+                actionResult["msg"] = "success"
+            else:
+                actionResult["msg"] = results
 
         return actionResult
 
