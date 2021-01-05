@@ -10,7 +10,8 @@ class _databaseSearch(action._action):
     dbType = str()
     timeout = int()
     search = str()
-    returnOne = bool()
+    limit = int()
+    count = bool()
 
     def run(self,data,persistentData,actionResult):
         import pyodbc
@@ -31,12 +32,18 @@ class _databaseSearch(action._action):
 
         dbControl = database.control(dbType,host,username,password,connectionDetails,timeout)
         if dbControl.isConnected():
-            rc, results = dbControl.query(search,self.returnOne)
+            rc, results = dbControl.query(search,self.limit)
             if rc:
-                if self.returnOne:
-                    actionResult["result"] = results
+                if self.limit == 1:
+                    if self.count:
+                        actionResult["result"] = 1
+                    else:
+                        actionResult["result"] = results[0]
                 else:
-                    actionResult["results"] = results
+                    if self.count:
+                        actionResult["result"] = len(results)
+                    else:
+                        actionResult["results"] = results
                 actionResult["rc"] = 0
                 actionResult["msg"] = "success"
             else:

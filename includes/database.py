@@ -22,16 +22,19 @@ class control():
             return True
         return False
 
-    def query(self,query,singleResult=False):
+    def query(self,query,limit=0):
         cursor = self.connection.cursor()
         try:
             cursor.execute(query)
             columns = [column[0] for column in cursor.description]
-            if singleResult:
-                results = {}
-                row = cursor.fetchone()
-                for x in range(len(columns)):
-                    results[columns[x]] = row[x]
+            if limit > 0:
+                results = []
+                rows = cursor.fetchmany(limit)
+                for row in rows:
+                    tempDict = {}
+                    for x in range(len(columns)):
+                        tempDict[columns[x]] = row[x]
+                    results.append(tempDict)
             else:
                 results = []
                 rows = cursor.fetchall()
