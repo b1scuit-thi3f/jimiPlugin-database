@@ -17,7 +17,7 @@ class _databaseSearch(action._action):
         def generate(self,classObject):
             formData = []
             formData.append({"type" : "break", "start" : True, "schemaitem": "Database Options"})
-            formData.append({"type" : "dropdown", "schemaitem" : "dbType", "dropdown" : classObject.dbType, "dropdown" : ["oracle","mssql"], "label" : "database type", "tooltip" : "The type of database (e.g. mysql, oracle)"})
+            formData.append({"type" : "dropdown", "schemaitem" : "dbType", "current": classObject.dbType, "dropdown" : ["oracle","mssql"], "label" : "database type", "tooltip" : "The type of database (e.g. mysql, oracle)"})
             formData.append({"type" : "input", "schemaitem" : "host", "textbox" : classObject.host, "tooltip" : "The name of the host"})
             formData.append({"type" : "input", "schemaitem" : "username", "textbox" : classObject.username, "tooltip" : "The username for the database"})
             formData.append({"type" : "input", "schemaitem" : "password", "textbox" : classObject.password, "tooltip" : "The password for the database"})
