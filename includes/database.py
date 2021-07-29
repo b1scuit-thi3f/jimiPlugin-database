@@ -1,7 +1,10 @@
 import pyodbc
 from core import helpers, auth, settings
 
-databaseSettings = settings.config["databasePlugin"]
+try:
+    databaseSettings = settings.config["databasePlugin"]
+except:
+    databaseSettings = settings.getSetting("databasePlugin",None)
 
 class control():
     def __init__(self,dbType,host,username,password,connectionDetails,timeout):

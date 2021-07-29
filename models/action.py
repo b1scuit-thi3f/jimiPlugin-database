@@ -13,30 +13,6 @@ class _databaseSearch(action._action):
     limit = int()
     count = bool()
 
-    class _properties(webui._properties):
-        def generate(self,classObject):
-            formData = []
-            formData.append({"type" : "break", "start" : True, "schemaitem": "Database Options"})
-            formData.append({"type" : "dropdown", "schemaitem" : "dbType", "current": classObject.dbType, "dropdown" : ["oracle","mssql"], "label" : "database type", "tooltip" : "The type of database (e.g. mysql, oracle)"})
-            formData.append({"type" : "input", "schemaitem" : "host", "textbox" : classObject.host, "tooltip" : "The name of the host"})
-            formData.append({"type" : "input", "schemaitem" : "username", "textbox" : classObject.username, "tooltip" : "The username for the database"})
-            formData.append({"type" : "input", "schemaitem" : "password", "textbox" : classObject.password, "tooltip" : "The password for the database"})
-            formData.append({"type" : "json-input", "schemaitem" : "connectionDetails", "textbox" : classObject.connectionDetails, "tooltip" : "Additional KVs for the db connection string"})
-            formData.append({"type" : "input", "schemaitem" : "search", "textbox" : classObject.search, "label" : "query", "tooltip" : "The search query"})
-            formData.append({"type" : "input", "schemaitem" : "timeout", "textbox" : classObject.timeout, "tooltip" : "How long to attempt connecting before timing out. Default 30s"})
-            formData.append({"type" : "input", "schemaitem" : "limit", "textbox" : classObject.limit, "tooltip" : "The number of results to return. 0 returns all"})
-            formData.append({"type" : "checkbox", "schemaitem" : "count", "checked" : classObject.count, "tooltip" : "Return a count of the results, not the results themselves"})
-            formData.append({"type" : "break", "start" : False, "schemaitem": "Database Options"})
-            formData.append({"type" : "break", "start" : True, "schemaitem": "Core Options"})
-            formData.append({"type" : "input", "schemaitem" : "_id", "textbox" : classObject._id})
-            formData.append({"type" : "input", "schemaitem" : "name", "textbox" : classObject.name})
-            formData.append({"type" : "checkbox", "schemaitem" : "enabled", "checked" : classObject.enabled})
-            formData.append({"type" : "json-input", "schemaitem" : "varDefinitions", "textbox" : classObject.varDefinitions})
-            formData.append({"type" : "input", "schemaitem" : "logicString", "textbox" : classObject.logicString})
-            formData.append({"type" : "checkbox", "schemaitem" : "log", "checked" : classObject.log})
-            formData.append({"type" : "input", "schemaitem" : "comment", "textbox" : classObject.comment})
-            return formData
-
     def run(self,data,persistentData,actionResult):
         import pyodbc
         host = helpers.evalString(self.host,{"data" : data})
@@ -60,16 +36,17 @@ class _databaseSearch(action._action):
             if rc:
                 if self.limit == 1:
                     if self.count:
-                        actionResult["result"] = 1
+                        actionResult["count"] = 1
                     else:
-                        actionResult["result"] = results[0]
+                        actionResult["row"] = results[0]
                 else:
                     if self.count:
-                        actionResult["result"] = len(results)
+                        actionResult["count"] = len(results)
                     else:
-                        actionResult["results"] = results
+                        actionResult["rows"] = results
                 actionResult["rc"] = 0
                 actionResult["msg"] = "success"
+                actionResult["result"] = True
             else:
                 actionResult["msg"] = results
 

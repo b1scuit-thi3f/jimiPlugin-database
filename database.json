@@ -1,0 +1,115 @@
+{
+   "name": "database",
+   "author": "b1scuit-thi3f",
+   "version": 0.13,
+   "categories": ["database"],
+   "description": "A JIMI Plugin for interacting with various databases. Currently supports MSSQL and Oracle.",
+   "icon": null,
+   "requirements": {
+      "jimi_min_version": null,
+      "jimi_max_version": null,
+      "plugins": []
+   },
+   "collections": {},
+   "triggers": {},
+   "actions": {
+      "databaseSearch": {
+         "display_name": "databaseSearch",
+         "className": "_databaseSearch",
+         "class_location": "models.action",
+         "description": "",
+         "fields": [
+            {
+               "schema_item": "host",
+               "schema_value": "host",
+               "type": "input",
+               "label": "host",
+               "description": ""
+            },
+            {
+               "schema_item": "username",
+               "schema_value": "username",
+               "type": "input",
+               "label": "username",
+               "description": ""
+            },
+            {
+               "schema_item": "password",
+               "schema_value": "password",
+               "type": "input",
+               "label": "password",
+               "description": ""
+            },
+            {
+               "schema_item": "connectionDetails",
+               "schema_value": "connectionDetails",
+               "type": "json-input",
+               "label": "connectionDetails",
+               "description": ""
+            },
+            {
+               "schema_item": "dbType",
+               "schema_value": "dbType",
+               "type": "dropdown",
+               "label": "dbType",
+               "description": "",
+               "dropdown" : ["oracle","mssql"]
+            },
+            {
+               "schema_item": "timeout",
+               "schema_value": "timeout",
+               "type": "input",
+               "label": "timeout",
+               "description": ""
+            },
+            {
+               "schema_item": "search",
+               "schema_value": "search",
+               "type": "input",
+               "label": "search",
+               "description": ""
+            },
+            {
+               "schema_item": "limit",
+               "schema_value": "limit",
+               "type": "input",
+               "label": "limit",
+               "description": ""
+            },
+            {
+               "schema_item": "count",
+               "schema_value": "count",
+               "type": "checkbox",
+               "label": "count",
+               "description": ""
+            }
+         ],
+         "data_out": {
+            "result": {
+               "description": "Returns True when successful.",
+               "type": "boolean",
+               "always_present": true,
+               "values": {
+                  "True": {
+                     "description": "Successful."
+                  },
+                  "False": {
+                     "description": "Failure."
+                  }
+               }
+            },
+            "rc": {
+               "description": "Returns the exit code for the action.",
+               "type": "number",
+               "always_present": true,
+               "values": {
+                  "0": {
+                     "description": "Successful."
+                  }
+               }
+            }
+         }
+      }
+   },
+   "settings": {}
+}
