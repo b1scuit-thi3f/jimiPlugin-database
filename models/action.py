@@ -49,7 +49,8 @@ class _databaseSearch(action._action):
                 actionResult["result"] = True
             else:
                 actionResult["msg"] = results
-
+        else:
+            actionResult["msg"] = dbControl.message
         return actionResult
 
     def setAttribute(self,attr,value,sessionData=None):

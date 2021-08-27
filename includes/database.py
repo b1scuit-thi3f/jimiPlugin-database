@@ -1,24 +1,25 @@
-import pyodbc
+import pyodbc, pymongo
 from core import helpers, auth, settings
+import jimi
 
-try:
-    databaseSettings = settings.config["databasePlugin"]
-except:
-    databaseSettings = settings.getSetting("databasePlugin",None)
+databaseSettings = jimi.config["databasePlugin"]
 
 class control():
     def __init__(self,dbType,host,username,password,connectionDetails,timeout):
         self.connection = False
+        self.message = ""
         try:
             if dbType == "mssql":
                 if "mssqlDriver" in databaseSettings and databaseSettings["mssqlDriver"] != "":
                     self.connection = pyodbc.connect("driver={0};server={1};uid={2};pwd={3};{4}".format(databaseSettings["mssqlDriver"],host,username,password,";".join(["{}={}".format(x,connectionDetails[x]) for x in connectionDetails])),timeout=timeout)
-            if dbType == "oracle":
+            elif dbType == "oracle":
                 if "oracleDriver" in databaseSettings and databaseSettings["oracleDriver"] != "":
                     self.connection = pyodbc.connect("driver={0};dbq={1};uid={2};pwd={3};{4}".format(databaseSettings["oracleDriver"],host,username,password,";".join(["{}={}".format(x,connectionDetails[x]) for x in connectionDetails])),timeout=timeout)
-                    
+            elif dbType == "mongo":
+                pass
+
         except Exception as e:
-            print(e)
+            self.message = str(e)
 
     def isConnected(self):
         if self.connection != False:
